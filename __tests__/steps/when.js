@@ -1,5 +1,6 @@
 require('dotenv').config()
 const AWS = require('aws-sdk')
+const GraphQL = require('../lib/graphql')
 
 const we_invoke_confirmUserSignup = async (username, name, email) => {
     const handler = require('../../functions/confirm-user-signup').handler
@@ -65,7 +66,36 @@ const a_user_signs_up = async (password, name, email) => {
     }
 }
 
+const a_user_calls_getMyProfile = async (user) => {
+  const getMyProfile = `query MyQuery {
+    getMyProfile {
+      backgroundImageUrl
+      bio
+      birthdate
+      createdAt
+      followersCount
+      followingCount
+      id
+      imageUrl
+      likesCount
+      location
+      name
+      screenName
+      tweetsCount
+      website
+    }
+  }`
+
+  const data = await GraphQL(process.env.API_URL, getMyProfile, {}, user.accessToken)
+  const profile = data.getMyProfile
+
+  console.log(`${user.username} - fetched profile`)
+
+  return profile
+}
+
 module.exports = {
     we_invoke_confirmUserSignup,
-    a_user_signs_up
+    a_user_signs_up,
+    a_user_calls_getMyProfile
 }

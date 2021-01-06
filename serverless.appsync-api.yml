@@ -5,3 +5,20 @@ userPoolConfig:
   awsRegion: us-west-1
   defaultAction: ALLOW
   userPoolId: !Ref CognitoUserPool
+mappingTemplatesLocation: mapping-templates
+mappingTemplates:
+  - type: Query
+    field: getMyProfile
+    dataSource: usersTable
+    # request: Query.getMyProfile.request.vtl       ## these can be ignored since I am following the default convention
+    # response: Query.getMyProfile.response.vtl
+
+dataSources:
+  - type: NONE
+    name: None
+  - type: AMAZON_DYNAMODB
+    name: usersTable
+    config:
+      tableName: !Ref UsersTable
+      # serviceRoleArn: if you do not specify this, then appsync will generate one 
+
