@@ -12,6 +12,16 @@ mappingTemplates:
     dataSource: usersTable
     # request: Query.getMyProfile.request.vtl       ## these can be ignored since I am following the default convention
     # response: Query.getMyProfile.response.vtl
+  - type: Query
+    field: getImageUploadUrl
+    dataSource: getImageUploadUrlFunction
+    request: false
+    response: false
+
+  - type: Mutation
+    field: editMyProfile
+    dataSource: usersTable
+  
 
 dataSources:
   - type: NONE
@@ -21,4 +31,8 @@ dataSources:
     config:
       tableName: !Ref UsersTable
       # serviceRoleArn: if you do not specify this, then appsync will generate one 
+  - type: AWS_LAMBDA
+    name: getImageUploadUrlFunction
+    config:
+      functionName: getImageUploadUrl
 
