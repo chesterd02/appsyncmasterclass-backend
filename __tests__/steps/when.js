@@ -94,8 +94,44 @@ const a_user_calls_getMyProfile = async (user) => {
   return profile
 }
 
+const we_invoke_getImageUploadUrl = async (username, extension, contentType) => {
+  const handler = require('../../functions/get-upload-url').handler
+  console.log("handler works")
+  const context = {}
+  const event = {
+    identity: {
+      username
+    },
+    arguments: {
+      extension,
+      contentType
+    }
+  }
+  console.log("almost done with when")
+  return await handler(event, context)
+}
+
+const a_user_calls_getImageUploadUrl = async (user, extension, contentType) => {
+  const getImageUploadUrl = `query getImageUploadUrl($extension: String, $contentType: String) {
+    getImageUploadUrl(extension: $extension, contentType: $contentType) 
+  }`
+  const variables = {
+    extension,
+    contentType
+  }
+
+  const data = await GraphQL(process.env.API_URL, getImageUploadUrl, variables, user.accessToken)
+  const url = data.getImageUploadUrl
+
+  console.log(`[${user.username}] - got image upload url`)
+
+  return url
+}
+
 module.exports = {
     we_invoke_confirmUserSignup,
     a_user_signs_up,
-    a_user_calls_getMyProfile
+    a_user_calls_getMyProfile,
+    we_invoke_getImageUploadUrl,
+    a_user_calls_getImageUploadUrl
 }

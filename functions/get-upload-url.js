@@ -1,4 +1,4 @@
-const S3 = require('aws-sdk/clinets/s3')
+const S3 = require('aws-sdk/clients/s3')
 const s3 = new S3({ useAccelerateEndpoint: true })
 const ulid = require('ulid')
 
@@ -28,6 +28,7 @@ module.exports.handler = async (event) => {
         ACL: 'public-read',
         ContentType: contentType
     }
-    const signedUrl = s3.getSignedUrl('putObject, params')   //you can use createPresignedPost to set limits on how big the files can be
+    console.log ("get-upload-url")
+    const signedUrl = s3.getSignedUrl('putObject', params)   //you can use createPresignedPost to set limits on how big the files can be
     return signedUrl
 }
