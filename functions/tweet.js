@@ -13,7 +13,7 @@ module.exports.handler = async (event) => {
     const timestamp = new Date().toJSON()
 
     const newTweet = {
-        __typeName: TweetTypes.TWEET,
+        __typename: TweetTypes.TWEET,
         id, 
         text,
         creator: username,
