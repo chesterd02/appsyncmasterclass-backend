@@ -2,6 +2,7 @@ require('dotenv').config()
 const given = require ('../../steps/given')
 const when = require ('../../steps/when')
 const then = require ('../../steps/then')
+const { findLastIndex } = require('lodash')
 const chance = require ('chance').Chance()
 
 describe('given an authenticated user', () => {
@@ -22,7 +23,8 @@ describe('given an authenticated user', () => {
                text,
                replies: 0,
                likes: 0,
-               retweets: 0
+               retweets: 0,
+               liked: false
            }) 
         })
 
