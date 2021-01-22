@@ -1,6 +1,9 @@
 require('dotenv').config()
 const AWS = require('aws-sdk')
 const GraphQL = require('../lib/graphql')
+const fs = require('fs')
+const velocityMapper = require('amplify-appsync-simulator/lib/velocity/value-mapper/mapper')
+const velocityTemplate = require('amplify-velocity-template')
 
 const we_invoke_confirmUserSignup = async (username, name, email) => {
     const handler = require('../../functions/confirm-user-signup').handler
@@ -167,6 +170,16 @@ const a_user_calls_tweet = async (user, text) => {
   return newTweet
 }
 
+const we_invoke_an_appsync_template = (templatePath, context) => {
+  const template = fs.readFileSync(templatePath, { encoding: 'utf-8' })
+  const ast = velocityTemplate.parse(template)
+  const compiler = new velocityTemplate.Compile(ast, {
+    valueMapper: velocityMapper.map,
+    escape: false
+  })
+  return JSON.parse(compiler.render(context))
+}
+
 module.exports = {
     we_invoke_confirmUserSignup,
     a_user_signs_up,
@@ -174,5 +187,6 @@ module.exports = {
     we_invoke_getImageUploadUrl,
     a_user_calls_getImageUploadUrl,
     we_invoke_tweet,
-    a_user_calls_tweet
+    a_user_calls_tweet,
+    we_invoke_an_appsync_template
 }
