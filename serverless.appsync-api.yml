@@ -28,6 +28,9 @@ mappingTemplates:
     field: editMyProfile
     dataSource: usersTable
   - type: Mutation
+    field: like
+    dataSource: likeMutation
+  - type: Mutation
     field: tweet
     dataSource: tweetFunction
     request: false
@@ -58,6 +61,23 @@ dataSources:
     name: timelinesTable
     config:
       tableName: !Ref TimelinesTable
+  - type: AMAZON_DYNAMODB
+    name: likesTable
+    config:
+      tableName: !Ref LikesTable
+  - type: AMAZON_DYNAMODB
+    name: likeMutation
+    config:
+      tableName: !Ref LikesTable
+      iamRoleStatements:
+        - Effect: Allow
+          Action: dynamodb:PutItem
+          Resource: !GetAtt LikesTable.Arn
+        - Effect: Allow
+          Action: dynamodb:UpdateItem
+          Resource:
+            - !GetAtt UsersTable.Arn
+            - !GetAtt TweetsTable.Arn
   - type: AWS_LAMBDA
     name: getImageUploadUrlFunction
     config:
@@ -69,3 +89,5 @@ dataSources:
 
 substitutions:
   TweetsTable: !Ref TweetsTable
+  LikesTable: !Ref LikesTable
+  UsersTable: !Ref UsersTable
