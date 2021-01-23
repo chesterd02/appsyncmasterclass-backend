@@ -1,9 +1,83 @@
 require('dotenv').config()
 const AWS = require('aws-sdk')
-const GraphQL = require('../lib/graphql')
+const { GraphQL, registerFragment} = require('../lib/graphql')
 const fs = require('fs')
 const velocityMapper = require('amplify-appsync-simulator/lib/velocity/value-mapper/mapper')
 const velocityTemplate = require('amplify-velocity-template')
+
+const myProfileFragment = `
+fragment myProfileFields on MyProfile {
+  id
+  name
+  screenName
+  imageUrl
+  backgroundImageUrl
+  bio
+  location
+  website
+  birthdate
+  createdAt
+  followersCount
+  followingCount
+  tweetsCount
+  likesCount
+}
+`
+const otherProfileFragment = `
+fragment otherProfileFields on OtherProfile {
+  id
+  name
+  screenName
+  imageUrl
+  backgroundImageUrl
+  bio
+  location
+  website
+  birthdate
+  createdAt
+  followersCount
+  followingCount
+  tweetsCount
+  likesCount
+}
+`
+const iProfileFragment = `
+fragment iProfileFields on IProfile {
+  ... on MyProfile {
+    ... myProfileFields
+  }
+  ... on OtherProfile {
+    ... otherProfileFields
+  }
+}
+`
+const tweetFragment = `
+fragment tweetFields on Tweet {
+  id
+  profile {
+    ... iProfileFields
+  }
+  createdAt
+  text
+  replies
+  likes
+  retweets
+  liked
+}
+`
+const iTweetFragment = `
+fragment iTweetFields on ITweet {
+  ... on Tweet {
+    ... tweetFields
+  }
+}
+`
+
+registerFragment('myProfileFields', myProfileFragment)
+registerFragment('otherProfileFields', otherProfileFragment)
+registerFragment('iProfileFields', iProfileFragment)
+registerFragment('tweetFields', tweetFragment)
+registerFragment('iTweetFields', iTweetFragment)
 
 const we_invoke_confirmUserSignup = async (username, name, email) => {
     const handler = require('../../functions/confirm-user-signup').handler
@@ -72,20 +146,7 @@ const a_user_signs_up = async (password, name, email) => {
 const a_user_calls_getMyProfile = async (user) => {
   const getMyProfile = `query MyQuery {
     getMyProfile {
-      backgroundImageUrl
-      bio
-      birthdate
-      createdAt
-      followersCount
-      followingCount
-      id
-      imageUrl
-      likesCount
-      location
-      name
-      screenName
-      tweetsCount
-      website
+      ... myProfileFields
     }
   }`
 
@@ -152,9 +213,7 @@ const a_user_calls_tweet = async (user, text) => {
     tweet(text: $text) {
       id
       profile {
-        id 
-        name
-        screenName
+        ... iProfileFields
       }
       createdAt
       text
@@ -191,21 +250,7 @@ const a_user_calls_getTweets = async (user, userId, limit, nextToken) => {
     getTweets(userId: $userId, limit: $limit, nextToken: $nextToken) {
       nextToken
       tweets {
-        id
-        createdAt
-        profile {
-          id 
-          name
-          screenName
-        }
-
-        ... on Tweet {
-          text
-          replies
-          likes
-          retweets
-          liked
-        }
+        ... iTweetFields
       }
     }
   }`
@@ -228,21 +273,7 @@ const a_user_calls_getMyTimeline = async (user, limit, nextToken) => {
     getMyTimeline(limit: $limit, nextToken: $nextToken) {
       nextToken
       tweets {
-        id
-        createdAt
-        profile {
-          id 
-          name
-          screenName
-        }
-
-        ... on Tweet {
-          text
-          replies
-          likes
-          retweets
-          liked
-        }
+        ... iTweetFields
       }
     }
   }`
