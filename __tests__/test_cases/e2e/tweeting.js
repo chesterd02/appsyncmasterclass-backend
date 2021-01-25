@@ -70,5 +70,46 @@ describe('given an authenticated user', () => {
                      })
               })
         })
+        describe('When he likes the tweet', () =>{ 
+            beforeAll(async () => {
+                await when.a_user_calls_like(user, tweet.id)
+            })
+            it('Should see Tweet.liked as true', async () => {
+                const { tweets } = await when.a_user_calls_getMyTimeline(user, 25)
+
+                expect (tweets).toHaveLength(1)
+                expect(tweets[0].id).toEqual(tweet.id)
+                expect(tweets[0].liked).toEqual(true)
+             })
+     
+             it('Should not be ale to like the same tweet a second time', async () => {
+                 await expect(() => when.a_user_calls_like(user, tweet.id))
+                     .rejects
+                     .toMatchObject({
+                         message: expect.stringContaining('DynamoDB transaction error')
+                     })
+              })
+        })
+        describe('When he unlikes the tweet', () =>{ 
+            beforeAll(async () => {
+                await when.a_user_calls_unlike(user, tweet.id)
+            })
+            it('Should see Tweet.liked as false', async () => {
+                const { tweets } = await when.a_user_calls_getMyTimeline(user, 25)
+
+                expect (tweets).toHaveLength(1)
+                expect(tweets[0].id).toEqual(tweet.id)
+                expect(tweets[0].liked).toEqual(false)
+             })
+     
+             it('Should not be ale to unlike the same tweet a second time', async () => {
+                 await expect(() => when.a_user_calls_unlike(user, tweet.id))
+                     .rejects
+                     .toMatchObject({
+                         message: expect.stringContaining('DynamoDB transaction error')
+                     })
+              })
+        })
     })
+    
 })
