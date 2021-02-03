@@ -82,13 +82,30 @@ describe('given an authenticated user', () => {
                 expect(tweets[0].liked).toEqual(true)
              })
      
-             it('Should not be ale to like the same tweet a second time', async () => {
-                 await expect(() => when.a_user_calls_like(user, tweet.id))
-                     .rejects
-                     .toMatchObject({
-                         message: expect.stringContaining('DynamoDB transaction error')
-                     })
-              })
+            it('Should not be ale to like the same tweet a second time', async () => {
+                await expect(() => when.a_user_calls_like(user, tweet.id))
+                    .rejects
+                    .toMatchObject({
+                        message: expect.stringContaining('DynamoDB transaction error')
+                    })
+            })
+
+            it('Should see this tweet when he calls getLikes', async () => {
+                const { tweets, nextToken } = await when.a_user_calls_getLikes(user, user.username, 25)
+
+                expect (nextToken).toBeNull()
+                expect(tweets).toHaveLength(1)
+                expect(tweets[0]).toMatchObject({
+                    ...tweet,
+                    liked: true,
+                    likes: 1,
+                    profile: {
+                        ...tweet.profile,
+                        likesCount: 1
+                    }
+                })
+
+            })
         })
         describe('When he unlikes the tweet', () =>{ 
             beforeAll(async () => {
