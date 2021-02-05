@@ -4,7 +4,7 @@ const when = require ('../../steps/when')
 const then = require ('../../steps/then')
 const path = require ('path')
 
-describe ('Given and authenticated user', () => {
+describe ('Given an authenticated user', () => {
     let user
     beforeAll (async () => {
         user = await given.an_authenicated_user()
@@ -12,6 +12,7 @@ describe ('Given and authenticated user', () => {
 
     it('The user can fetch his profile with getMyProfile', async() => {
         const profile = await when.a_user_calls_getMyProfile(user)
+        console.log ('called getMyProfile: ', JSON.stringify(profile))
 
         expect(profile).toMatchObject({
             id : user.username,

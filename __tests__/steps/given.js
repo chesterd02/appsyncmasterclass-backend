@@ -10,7 +10,7 @@ const a_random_user = () =>{
     const name = `${firstName}${lastName}${suffix}`
     const password = chance.string({ length: 8})
     const email = `${firstName}-${lastName}-${suffix}@appsyncmasterclass.com`
-    console.log(`given will return ${name}, ${password}, ${email}`)
+    //console.log(`given will return ${name}, ${password}, ${email}`)
     return{
         name,
         password,
@@ -36,7 +36,7 @@ const an_authenicated_user = async () => {
     }).promise()
 
     const username = signUpResp.UserSub
-    console.log(`[${email}] - user has signed up [${username}]`)
+    //console.log(`[${email}] - user has signed up [${username}]`)
 
     
     await cognito.adminConfirmSignUp({
@@ -44,7 +44,7 @@ const an_authenicated_user = async () => {
         Username: username
     }).promise()
 
-    console.log(`*************[${email}] - confirmed sign up`)
+    //console.log(`*************[${email}] - confirmed sign up`)
 
     const auth = await cognito.initiateAuth({
         AuthFlow: 'USER_PASSWORD_AUTH',
@@ -55,7 +55,7 @@ const an_authenicated_user = async () => {
         }
     }).promise()
 
-console.log(`${email} - signed in`)
+//console.log(`${email} - signed in`)
 
     return {
         username,

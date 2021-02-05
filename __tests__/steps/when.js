@@ -144,9 +144,16 @@ const a_user_signs_up = async (password, name, email) => {
 }
 
 const a_user_calls_getMyProfile = async (user) => {
+  console.log('***** Called a_user_calls_getMyProfile ****')
   const getMyProfile = `query MyQuery {
     getMyProfile {
       ... myProfileFields
+      tweets {
+        nextToken
+        tweets {
+          ... iTweetFields
+        }
+      }
     }
   }`
 

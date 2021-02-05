@@ -10,7 +10,7 @@ describe('When a user signs up', () => {
       const user = await when.a_user_signs_up(password, name, email)
 
       const ddbUser = await then.user_exists_in_UsersTable(user.username)
-      console.log("after then")
+      // console.log("after then")
       expect(ddbUser).toMatchObject({
         id: user.username,
         name: name,
@@ -20,11 +20,11 @@ describe('When a user signs up', () => {
         tweetsCount: 0,
         likesCount: 0
       })
-      console.log('matched user')
+      // console.log('matched user')
   
       const [firstName, lastName] = name.match(/[A-Z][a-z]+/g)
-      console.log(`firstName: ${firstName}`)
-      console.log(`lastName: ${lastName}`)
+      // console.log(`firstName: ${firstName}`)
+      // console.log(`lastName: ${lastName}`)
       expect(ddbUser.screenName).toContain(firstName)
       expect(ddbUser.screenName).toContain(lastName)
     })
