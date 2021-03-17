@@ -10,8 +10,9 @@ mappingTemplates:
   - type: Query
     field: getMyProfile
     dataSource: usersTable
-    # request: Query.getMyProfile.request.vtl       ## these can be ignored since I am following the default convention
-    # response: Query.getMyProfile.response.vtl
+  - type: Query
+    field: getProfile
+    dataSource: usersTable
   - type: Query
     field: getImageUploadUrl
     dataSource: getImageUploadUrlFunction
