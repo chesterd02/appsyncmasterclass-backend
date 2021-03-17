@@ -89,6 +89,12 @@ mappingTemplates:
     dataSource: tweetsTable
     request: MyProfile.tweets.request.vtl
     response: MyProfile.tweets.request.vtl
+  - type: OtherProfile
+    field: following
+    dataSource: relationshipsTable
+  - type: OtherProfile
+    field: followedBy
+    dataSource: relationshipsTable
   - type: Retweet
     field: retweetOf
     dataSource: tweetsTable
