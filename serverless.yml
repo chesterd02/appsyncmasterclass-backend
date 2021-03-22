@@ -167,11 +167,12 @@ functions:
     environment:
       TWEETS_TABLE: !Ref TweetsTable
       TIMELINES_TABLE: !Ref TimelinesTable
-      MAX_TWEETS: 100
+      MAX_TWEETS: "100"
     events:
       - stream:
           type: dynamodb
           arn: !GetAtt RelationshipsTable.StreamArn
+    iamRoleStatementsName: ${self:service}-${self:custom.stage}-distributeTweetsToFollower
     iamRoleStatements:
       - Effect: Allow
         Action: dynamodb:Query
