@@ -27,6 +27,22 @@ mappingTemplates:
   - type: Query
     field: getLikes
     dataSource: likesTable
+  - type: Query
+    field: getFollowers
+    kind: PIPELINE
+    functions:
+      - getFollowers
+      - hydrateFollowers
+    request: simplePipeline.request.vtl
+    response: simplePipeline.response.vtl
+  - type: Query
+    field: getFollowing
+    kind: PIPELINE
+    functions:
+      - getFollowing
+      - hydrateFollowing
+    request: simplePipeline.request.vtl
+    response: simplePipeline.response.vtl
 
   - type: Mutation
     field: editMyProfile
@@ -107,6 +123,16 @@ mappingTemplates:
     dataSource: tweetsTable
   - type: Reply
     field: inReplyToUsers
+    dataSource: usersTable
+
+functionConfigurations:
+  - name: getFollowers
+    dataSource: relationshipsTable
+  - name: hydrateFollowers
+    dataSource: usersTable
+  - name: getFollowing
+    dataSource: relationshipsTable
+  - name: hydrateFollowing
     dataSource: usersTable
 
 dataSources:
